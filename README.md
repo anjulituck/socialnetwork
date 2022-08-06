@@ -16,11 +16,11 @@ Insomnia
 
 ## Installation 
 
-- Clone Repo
-- Install Express & MongoDB 
+- Clone Repo.
+- Install Express & Mongoose. 
 - Use npm start to get started.
 
 ## Walkthrough Video
 
-[Walkthrough Video]()
+[Walkthrough Video](https://www.loom.com/share/bb0aa66c50eb438489b53ced62a6ed3b)
 
