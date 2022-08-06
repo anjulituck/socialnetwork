@@ -1,13 +1,13 @@
-const {User} = require('...models');
-
+const {User, Thought} = require('../models');
 
 const userController = {
 // GET ROUTE - get all users 
 getAllUsers(req,res){
     User.find({})
     .populate({
-        path:"thoughts",
-        select:"-__v"
+        path:"thought",
+        select:"-__v",
+        model:Thought
     })
     .select("-__v")
     .sort({_id:-1})
@@ -18,11 +18,12 @@ getAllUsers(req,res){
     })
 },
 // GET ROUTE - get single user by id
-getUserByID({params}, res) {
+getUserById({params}, res) {
     User.findOne({_id:params.id})
     .populate({
-        path:"thoughts",
-        select:"-__v"
+        path:"thought",
+        select:"-__v",
+        model:Thought
     })
     .select("-__v")
     .then(dbUserData=> res.json(dbUserData))
@@ -63,7 +64,7 @@ createUser({body},res){
  },
 // PUT ROUTE - update single user by id
 updateUser({params,body},res){
-    User.findOneAndUpdate({_id:paramas.id},body,{new:true,runValidators:true})
+    User.findOneAndUpdate({_id:params.id},body,{new:true,runValidators:true})
     .then(dbUserData => {
         if(!dbUserData){
             res.status(404).json({message:'No user found with this id.'});
@@ -74,7 +75,7 @@ updateUser({params,body},res){
     .catch(err => res.json(err))
 }, 
 // DELETE ROUTE - delete single user by id
-deleteUser({param}, res) {
+deleteUser({params}, res) {
     User.findOneAndDelete({_id:params.id})
     .then(dbUserData => res.json(dbUserData))
     .catch(err => res.json(err))

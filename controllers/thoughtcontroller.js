@@ -13,7 +13,7 @@ const thoughtController = {
         })
     },
     // GET ROUTE - get thought by id
-    getThoughtByID({params}, res) {
+    getThoughtById({params}, res) {
         Thought.findOne({_id:params.id})
         .select("-__v")
         .then(dbThoughtData=> res.json(dbThoughtData))
@@ -25,7 +25,7 @@ const thoughtController = {
     // POST ROUTE - create thought and add to user
     addThought({params,body}, res){
         console.log(params);
-        Thoughts.create(body)
+        Thought.create(body)
             .then(({_id})=> {
                 return User.findOneAndUpdate(
                     {_id:params.userId},

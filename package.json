@@ -2,5 +2,27 @@
   "dependencies": {
     "express": "^4.18.1",
     "mongoose": "^6.5.1"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "socialnetwork",
+  "description": "## User Story",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anjulituck/socialnetwork.git"
+  },
+  "keywords": [
+    "social",
+    "network"
+  ],
+  "author": "Anjuli Tuck",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anjulituck/socialnetwork/issues"
+  },
+  "homepage": "https://github.com/anjulituck/socialnetwork#readme"
 }

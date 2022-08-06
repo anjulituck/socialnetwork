@@ -7,6 +7,7 @@ In this project, we are building a social media api using a NoSQL database. For 
 ## Technologies 
 
 Javascript
+Node
 Express
 MongoDB
 Mongoose
