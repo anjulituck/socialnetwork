@@ -1,12 +1,12 @@
-const {Thoughts, User} = require('../models');
+const {Thought, User} = require('../models');
 
-const thoughtsController = {
+const thoughtController = {
     // GET ROUTE - get all thoughts
     getAllThoughts(req,res){
-        Thoughts.find({})
-        .section("-__v")
+        Thought.find({})
+        .select("-__v")
         .sort({_id:-1})
-        .then(dbThoughtsData=> res.json(dbThoughtsData))
+        .then(dbThoughtData=> res.json(dbThoughtData))
         .catch(err=>{
             console.log(err);
             res.sendStatus(400);
@@ -14,9 +14,9 @@ const thoughtsController = {
     },
     // GET ROUTE - get thought by id
     getThoughtByID({params}, res) {
-        Thoughts.findOne({_id:params.id})
-        .section("-__v")
-        .then(dbThoughtsData=> res.json(dbThoughtsData))
+        Thought.findOne({_id:params.id})
+        .select("-__v")
+        .then(dbThoughtData=> res.json(dbThoughtData))
         .catch(err=>{
             console.log(err);
             res.sendStatus(400);
@@ -45,8 +45,8 @@ const thoughtsController = {
     },
      // POST ROUTE - create reaction and add as stored with single thought 
      addReaction({params, body},res){
-        Thoughts.findOneAndUpdate(
-            {_id:params.thoughtsId}, //.thoughtId
+        Thought.findOneAndUpdate(
+            {_id:params.thoughtId}, //.thoughtId
             {$push: {reactions:body}},
             {new:true, runValidators:true}
         )
@@ -61,9 +61,9 @@ const thoughtsController = {
      },
      // PUT ROUTE - update single thought by id
     updateThought({params,body},res){
-    Thoughts.findOneAndUpdate({_id:paramas.thoughtsId},body,{new:true,runValidators:true})
-    .then(dbThoughtsData => {
-        if(!dbThoughtsData){
+    Thought.findOneAndUpdate({_id:params.thoughtId},body,{new:true,runValidators:true})
+    .then(dbThoughtData => {
+        if(!dbThoughtData){
             res.status(404).json({message:'No thought found with this id.'});
             return;
         }
@@ -73,14 +73,14 @@ const thoughtsController = {
 }, 
     // DELETE ROUTE - delete thought by id
     deleteThought({params},res){
-        Thoughts.findOneAndDelete({_id:params.thoughtsId})
+        Thoughts.findOneAndDelete({_id:params.thoughtId})
             .then(deletedThought =>{
                 if(!deletedThought){
                     return res.status(404).json({message:"No comment with this id"});
                 }
                 return User.findOneAndUpdate(
                     { _id: params.userId },
-                    { $pull: { thoughts: params.thoughtsId } }, //.thoughtId
+                    { $pull: { thoughts: params.thoughtId } }, //.thoughtId
                     { new: true }
                   )
             })
@@ -96,7 +96,7 @@ const thoughtsController = {
  // DELETE ROUTE - delete reaction stored with single thought 
     deleteReaction({params},res){
         Thoughts.findOneAndUpdate(
-            {_id:params.thoughtsId}, //.thoughtId
+            {_id:params.thoughtId}, //.thoughtId
             {pull:{reactions:{reactionId:params.reactionId}}},
             {new:true}
         )
@@ -106,4 +106,4 @@ const thoughtsController = {
 }
 
 
-module.exports = thoughtsController;
+module.exports = thoughtController;

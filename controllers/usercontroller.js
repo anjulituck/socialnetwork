@@ -9,7 +9,7 @@ getAllUsers(req,res){
         path:"thoughts",
         select:"-__v"
     })
-    .section("-__v")
+    .select("-__v")
     .sort({_id:-1})
     .then(dbUserData=> res.json(dbUserData))
     .catch(err=>{
@@ -24,7 +24,7 @@ getUserByID({params}, res) {
         path:"thoughts",
         select:"-__v"
     })
-    .section("-__v")
+    .select("-__v")
     .then(dbUserData=> res.json(dbUserData))
     .catch(err=>{
         console.log(err);
@@ -40,6 +40,27 @@ createUser({body},res){
         res.sendStatus(400);
     })
 },
+// POST ROUTE - add friend to single user 
+    addFriend({params},res){
+    User.findOneAndUpdate(
+        {_id:params.userId}, //.thoughtId
+        {$push: {friends:params.friendId}},
+        {new:true} //,runValidators:true
+    )
+    .populate({
+        path:"friends",
+        select:"-__v"
+    })
+    .select("-__v")
+    .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this id.' });
+          return;
+        }
+        res.json(dbUserData);
+    })
+    .catch(err => res.json(err));
+ },
 // PUT ROUTE - update single user by id
 updateUser({params,body},res){
     User.findOneAndUpdate({_id:paramas.id},body,{new:true,runValidators:true})
@@ -57,8 +78,24 @@ deleteUser({param}, res) {
     User.findOneAndDelete({_id:params.id})
     .then(dbUserData => res.json(dbUserData))
     .catch(err => res.json(err))
-}
-
+},
+// DELETE ROUTE - delete friend from list to single user 
+    deleteFriend({params},res){
+    User.findOneAndDelete(
+        {_id:params.userId}, //.thoughtId
+        {$pull: {friends:params.friendId}},
+        {new:true} 
+    )
+    .select("-__v")
+    .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No user found with this id.' });
+          return;
+        }
+        res.json(dbUserData);
+    })
+    .catch(err => res.json(err));
+ }
 }
 
 module.exports = userController;
